@@ -4,15 +4,22 @@ pragma solidity ^0.8.24;
 
 import {Wallet} from "../src/Wallet.sol";
 import {Test} from "forge-std/Test.sol";
+import {DeployWallet} from "../script/DeployWallet.s.sol";
 
 contract TestAuth is Test {
-    Wallet wallet;
+    Wallet public wallet;
 
     function setUp() public {
-        wallet = new Wallet();
+        DeployWallet deployer = new DeployWallet();
+        wallet = deployer.deployWallet();
+        // wallet = new Wallet();
     }
 
     function testSetOwner() public {
+        // if Deploy script is used, the owner is the deployer
+        vm.prank(msg.sender);
+
+        // otherwise, the owner is the address that created the contract
         wallet.setOwner(address(1));
         assertEq(wallet.owner(), address(1));
     }
