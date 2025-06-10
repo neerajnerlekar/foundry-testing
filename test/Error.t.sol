@@ -4,12 +4,14 @@ pragma solidity ^0.8.24;
 
 import {Error} from "../src/Error.sol";
 import {Test} from "forge-std/Test.sol";
+import {DeployError} from "../script/DeployError.s.sol";
 
 contract TestError is Test {
-    Error error;
+    Error public error;
 
     function setUp() external {
-        error = new Error();
+        DeployError deployer = new DeployError();
+        error = deployer.deployError();
     }
 
     function testFail() public view {
