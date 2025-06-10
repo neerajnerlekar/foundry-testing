@@ -3,7 +3,7 @@
 pragma solidity ^0.8.24;
 
 import {Wallet} from "../src/Wallet.sol";
-import {Test} from "forge-std/Test.sol";
+import {Test, console2} from "forge-std/Test.sol";
 import {DeployWallet} from "../script/DeployWallet.s.sol";
 
 contract TestAuth is Test {
@@ -41,5 +41,35 @@ contract TestAuth is Test {
         vm.stopPrank();
 
         wallet.setOwner(address(1));
+    }
+
+    function testFailModifierOnlyOwner() public {
+        vm.expectRevert("Wallet__NotOwner()");
+        wallet.withdraw(1 ether);
+    }
+
+    function testWithdraw() public {
+        hoax(address(wallet), 2 ether);
+        uint256 initialBalance = address(wallet).balance;
+        uint256 withdrawAmount = 1 ether;
+        console2.log("Initial Wallet Balance: %s", initialBalance / 1e18);
+
+        vm.startPrank(wallet.owner());
+        wallet.withdraw(withdrawAmount);
+        vm.stopPrank();
+
+        assertEq(address(wallet).balance, initialBalance - withdrawAmount);
+    }
+
+    function testFailWithdrawNotEnoughFunds() public {
+        vm.startPrank(wallet.owner());
+        wallet.withdraw(address(wallet).balance + 1 ether);
+        vm.stopPrank();
+    }
+
+    function testFailWithdrawNotOwner() public {
+        vm.startPrank(address(1));
+        wallet.withdraw(1 ether);
+        vm.stopPrank();
     }
 }
