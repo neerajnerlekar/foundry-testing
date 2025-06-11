@@ -33,7 +33,7 @@ contract TestError is Test {
         error.throwCustomError();
     }
 
-    function testErrorLabel() public {
+    function testErrorLabel() public pure {
         assertEq(uint256(1), uint256(1), "test 1");
         assertEq(uint256(1), uint256(1), "test 2");
         assertEq(uint256(1), uint256(1), "test 3");
