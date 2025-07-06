@@ -4,13 +4,15 @@ pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
 import {Auction} from "../src/Time.sol";
+import {DeployTime} from "../script/DeployTime.s.sol";
 
 contract TimeTest is Test {
     Auction auction;
     uint256 public startAt;
 
     function setUp() external {
-        auction = new Auction();
+        DeployTime deployer = new DeployTime();
+        auction = deployer.deployTime();
         startAt = block.timestamp;
     }
 
