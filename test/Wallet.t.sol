@@ -4,15 +4,14 @@ pragma solidity ^0.8.24;
 
 import {Test, console} from "forge-std/Test.sol";
 import {Wallet} from "../src/Wallet.sol";
+import {DeployWallet} from "../script/DeployWallet.s.sol";
 
 contract WalletTest is Test {
     Wallet wallet;
 
-    uint256 public constant INITIAL_BALANCE = 10 ether;
-
     function setUp() public {
-        wallet = new Wallet{value: INITIAL_BALANCE}();
-        // wallet = new Wallet();
+        DeployWallet deployer = new DeployWallet();
+        wallet = deployer.deployWallet();
     }
 
     function _send(uint256 amount) private {

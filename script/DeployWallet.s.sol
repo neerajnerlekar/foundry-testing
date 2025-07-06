@@ -5,9 +5,11 @@ import {Script, console2} from "forge-std/Script.sol";
 import {Wallet} from "../src/Wallet.sol";
 
 contract DeployWallet is Script {
+    uint256 public constant INITIAL_BALANCE = 10 ether;
+
     function deployWallet() public returns (Wallet) {
         vm.startBroadcast();
-        Wallet wallet = new Wallet();
+        Wallet wallet = new Wallet{value: INITIAL_BALANCE}();
         vm.stopBroadcast();
 
         console2.log("Wallet deployed at:", address(wallet));
